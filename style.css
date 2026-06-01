@@ -1,0 +1,824 @@
+/* ═══════════════════════════════════════
+   1. RESET E VARIÁVEIS GLOBAIS
+═══════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-deep:    #07081a;
+  --bg-card:    #0d1035;
+  --bg-card2:   #111540;
+  --bg-panel:   #0a0c25;
+  --accent:     #7c3aed;
+  --accent2:    #a855f7;
+  --gold:       #f59e0b;
+  --green:      #22c55e;
+  --blue:       #3b82f6;
+  --red:        #ef4444;
+  --text:       #e2e8f0;
+  --text-muted: #94a3b8;
+  --border:     rgba(124, 58, 237, 0.25);
+  --glow-purple: 0 0 20px rgba(124, 58, 237, 0.5);
+  --glow-green:  0 0 20px rgba(34, 197, 94, 0.5);
+}
+
+/* ═══════════════════════════════════════
+   2. BASE: BODY E FUNDO ESTRELADO
+═══════════════════════════════════════ */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden; /* ← sem scroll na página */
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.06) 0%, transparent 50%);
+}
+
+/* Estrelas decorativas no fundo */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 50% 30%, rgba(255,255,255,0.2) 0%, transparent 100%);
+}
+
+/* ═══════════════════════════════════════
+   3. HEADER
+═══════════════════════════════════════ */
+header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(10, 12, 37, 0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  background: var(--accent);
+  border-color: var(--accent2);
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.logo-text .quiz   { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 3px; }
+.logo-text .master { font-size: 15px; font-weight: 900; color: var(--gold); }
+
+.header-title h1 { font-size: 15px; font-weight: 700; color: var(--text); }
+.header-title p  { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+/* ═══════════════════════════════════════
+   4. LAYOUT PRINCIPAL (3 COLUNAS)
+═══════════════════════════════════════ */
+.game-wrapper {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr 190px;
+  gap: 16px;
+  padding: 12px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 65px); /* ← ocupa exato o espaço restante */
+  overflow: hidden;
+}
+
+.btn-exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-exit:hover {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+}
+/* ═══════════════════════════════════════
+   5. PAINÉIS LATERAL (CARDS DE STAT)
+═══════════════════════════════════════ */
+.panel-left,
+.panel-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden; /* ← sem scroll interno */
+}
+
+/* Card do jogador */
+.player-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}.player-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  margin: 0 auto 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 3px solid var(--accent2);
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.4);
+}
+
+.player-name {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 2px 12px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.stat-card,
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-icon,
+.info-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.stat-label,
+.info-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.stat-value,
+.info-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* Cores diferentes por info */
+#timer         { color: var(--gold); }
+#attemptsDisplay { color: var(--blue); }
+#pairsDisplay  { color: var(--green); }
+#attemptsLeft  { color: var(--blue); }
+
+/* Botão ranking */
+.btn-ranking {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-ranking:hover {
+  background: var(--accent);
+  border-color: var(--accent2);
+  box-shadow: var(--glow-purple);
+}
+
+/* ═══════════════════════════════════════
+   6. ÁREA CENTRAL E DIFICULDADE
+═══════════════════════════════════════ */
+.grid-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+}
+
+.difficulty-bar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.diff-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diff-btn.active,
+.diff-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent2);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════
+   7. GRADE DE CARTAS
+═══════════════════════════════════════ */
+#card-grid {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ─── CARTA ─── */
+.card {
+  aspect-ratio: 1;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+}
+
+/* Quando virada ou encontrada, gira 180° */
+.card.flipped .card-inner,
+.card.matched .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Frente e verso da carta */
+.card-face,
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* VERSO — o que o jogador vê no início */
+.card-back {
+  background: var(--bg-card);
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  overflow: hidden;
+}
+
+.card-back::before {
+  content: '🧠';
+  opacity: 0.12;
+  font-size: 42px;
+}
+
+/* Padrão xadrez sutil no verso */
+.card-back-pattern {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 6px,
+    rgba(124, 58, 237, 0.04) 6px,
+    rgba(124, 58, 237, 0.04) 7px
+  );
+}
+
+/* FRENTE — o emoji fica aqui */
+.card-face {
+  background: #141750;
+  border: 2px solid rgba(124, 58, 237, 0.4);
+  transform: rotateY(180deg); /* começa escondida */
+  font-size: 44px;
+}
+
+/* Hover no verso */
+.card:hover:not(.flipped):not(.matched) .card-back {
+  border-color: var(--accent2);
+  box-shadow: var(--glow-purple);
+}
+
+/* Carta encontrada — borda verde + brilho */
+.card.matched .card-face {
+  border-color: var(--green);
+  background: #0d2d1a;
+  box-shadow: var(--glow-green);
+  animation: matchPulse 0.5s ease-out;
+}
+
+/* Carta errada — borda vermelha + tremida */
+.card.wrong .card-face {
+  border-color: var(--red);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.6);
+  animation: shake 0.4s ease-out;
+}
+
+/* ═══════════════════════════════════════
+   8. ANIMAÇÕES
+═══════════════════════════════════════ */
+@keyframes matchPulse {
+  0%   { transform: rotateY(180deg) scale(1); }
+  40%  { transform: rotateY(180deg) scale(1.12); }
+  100% { transform: rotateY(180deg) scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25%       { transform: rotateY(180deg) translateX(-4px); }
+  75%       { transform: rotateY(180deg) translateX(4px); }
+}
+
+/* ═══════════════════════════════════════
+   9. PAINEL DIREITO — BOTÕES
+═══════════════════════════════════════ */
+.hint-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  box-shadow: var(--glow-purple);
+}
+
+.hint-btn span {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.hint-btn:hover  { filter: brightness(1.1); transform: translateY(-1px); }
+.hint-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.new-game-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.new-game-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent2);
+  box-shadow: var(--glow-purple);
+}
+
+.tip-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tip-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tip-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════
+   10. MODAL DE VITÓRIA
+═══════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(6px);
+  padding: 16px; /* ← garante margem nas bordas */
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--bg-panel);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 24px 32px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  max-height: calc(100vh - 32px); /* ← nunca ultrapassa a tela */
+  overflow-y: auto;               /* ← scroll apenas dentro do modal */
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.3);
+  animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Scrollbar dentro do modal */
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-track { background: var(--bg-card2); border-radius: 4px; }
+.modal::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+.modal-emoji    { font-size: 48px; display: block; margin-bottom: 10px; }
+.modal-title    { font-size: 22px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+
+.modal-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modal-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 6px;
+}
+
+.modal-stat-value { font-size: 16px; font-weight: 700; color: var(--text); }
+.modal-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+.modal-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  box-shadow: var(--glow-purple);
+  margin-bottom: 8px;
+}
+
+.modal-btn:hover    { filter: brightness(1.12); transform: translateY(-1px); }
+.modal-btn.secondary {
+  background: var(--bg-card2);
+  color: var(--text);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+/* Ranking modal */
+.ranking-modal { max-width: 500px; padding: 24px 28px; }
+
+.ranking-list {
+  max-height: 45vh; /* ← relativo à tela, sempre visível */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════════
+   11. CONFETES
+═══════════════════════════════════════ */
+.confetti-piece {
+  position: fixed;
+  top: -20px;
+  border-radius: 2px;
+  z-index: 200;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════
+   12. RESPONSIVO
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .game-wrapper {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .panel-left,
+  .panel-right {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .player-card { flex: 1 1 100%; }
+  .stat-card   { flex: 1 1 calc(50% - 6px); }
+  .info-card   { flex: 1 1 calc(50% - 6px); }
+
+  .hint-btn,
+  .new-game-btn,
+  .tip-card,
+  .btn-ranking { flex: 1 1 100%; }
+}
+
+/* ═══════════════════════════════════════
+   CONFIGURAÇÕES
+═══════════════════════════════════════ */
+
+.settings-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.settings-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.settings-input:focus {
+  border-color: var(--accent2);
+}
+
+.settings-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.option-btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  border-color: var(--accent2);
+  color: var(--text);
+}
+
+.option-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════
+   RANKING
+═══════════════════════════════════════ */
+
+.ranking-modal {
+  max-width: 500px;
+  padding: 32px 36px;
+}
+
+.ranking-list {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+/* Scrollbar estilizada */
+.ranking-list::-webkit-scrollbar {
+  width: 4px;
+}
+.ranking-list::-webkit-scrollbar-track {
+  background: var(--bg-card2);
+  border-radius: 4px;
+}
+.ranking-list::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+/* Cada linha do histórico */
+.ranking-item {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: border-color 0.2s;
+}
+
+.ranking-item:hover {
+  border-color: var(--accent2);
+}
+
+/* Top 3 com destaque */
+.ranking-item.rank-1 { border-color: var(--gold); }
+.ranking-item.rank-2 { border-color: #94a3b8; }
+.ranking-item.rank-3 { border-color: #b45309; }
+
+.ranking-position {
+  font-size: 18px;
+  text-align: center;
+}
+
+.ranking-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.ranking-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ranking-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  gap: 10px;
+}
+
+.ranking-score {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Mensagem quando não há histórico */
+.ranking-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ranking-empty span {
+  display: block;
+  font-size: 40px;
+  margin-bottom: 12px;
+}

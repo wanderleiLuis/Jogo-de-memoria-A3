@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Memória</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header>
+  <div class="logo">
+    <div class="logo-icon">🧠</div>
+    <div class="logo-text">
+      <span class="quiz">QUIZ</span>
+      <span class="master">MASTER</span>
+    </div>
+  </div>
+
+  <div class="header-title">
+    <h1>🧠 JOGO DA MEMÓRIA</h1>
+    <p>Encontre todos os pares!</p>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn-icon" id="soundBtn">🔊</button>
+    <button class="btn-icon" id="settingsBtn" title="Configurações">⚙️</button>
+    <button class="btn-exit" id="exitBtn">← Sair</button>
+  </div>
+</header>
+
+  <!-- ═══ ÁREA PRINCIPAL ═══ -->
+  <div class="game-wrapper">
+
+    <!-- PAINEL ESQUERDO -->
+    <aside class="panel-left">
+      <div class="player-card">
+        <div class="avatar">🧑</div>
+        <div class="player-name">Jogador</div>
+        <span class="level-badge" id="levelBadge">Nível 1</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">⭐</span>
+        <div>
+          <div class="stat-label">Pontuação</div>
+          <div class="stat-value" id="score">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🏆</span>
+        <div>
+          <div class="stat-label">Melhor Pontuação</div>
+          <div class="stat-value" id="bestScore">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <div>
+          <div class="stat-label">Tentativas</div>
+          <div class="stat-value" id="attemptsLeft">0</div>
+        </div>
+      </div>
+
+      <button class="btn-ranking" id="rankingBtn">📊 Ver Ranking</button>
+    </aside>
+
+    <!-- CENTRO: GRADE DE CARTAS -->
+    <main class="grid-area">
+      <div class="grid-container">
+
+        <!-- Botões de dificuldade -->
+        <div class="difficulty-bar">
+          <button class="diff-btn active" data-diff="easy">Fácil 4×3</button>
+          <button class="diff-btn" data-diff="medium">Médio 4×4</button>
+          <button class="diff-btn" data-diff="hard">Difícil 5×4</button>
+        </div>
+
+        <!-- Grade das cartas (preenchida pelo JS) -->
+        <div id="card-grid"></div>
+
+      </div>
+    </main>
+
+    <!-- PAINEL DIREITO -->
+    <aside class="panel-right">
+      <div class="info-card">
+        <span class="info-icon">🕐</span>
+        <div>
+          <div class="info-label">Tempo</div>
+          <div class="info-value" id="timer">00:00</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-icon">🔄</span>
+        <div>
+          <div class="info-label">Tentativas</div>
+          <div class="info-value" id="attemptsDisplay">0</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-icon">✅</span>
+        <div>
+          <div class="info-label">Pares Encontrados</div>
+          <div class="info-value" id="pairsDisplay">0 / 0</div>
+        </div>
+      </div>
+
+      <button class="hint-btn" id="hintBtn">
+        💡 Dica
+        <span id="hintCount">⚡ 3 restantes</span>
+      </button>
+
+      <button class="new-game-btn" id="newGameBtn">🔄 Novo Jogo</button>
+
+      <div class="tip-card">
+        <div class="tip-header">💡 Dica</div>
+        <p class="tip-text" id="tipText">
+          Encontre todos os pares no menor tempo e com o menor número de tentativas!
+        </p>
+      </div>
+    </aside>
+
+  </div><!-- fim .game-wrapper -->
+
+  <!-- ═══ MODAL DE VITÓRIA ═══ -->
+  <div class="modal-overlay" id="winModal">
+    <div class="modal">
+      <span class="modal-emoji" id="modalEmoji">🎉</span>
+      <h2 class="modal-title" id="modalTitle">PARABÉNS!</h2>
+      <p class="modal-subtitle" id="modalSubtitle">Você completou o jogo!</p>
+
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="wTime">--</div>
+          <div class="modal-stat-label">Tempo</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="wAttempts">--</div>
+          <div class="modal-stat-label">Tentativas</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="wScore">--</div>
+          <div class="modal-stat-label">Pontuação</div>
+        </div>
+      </div>
+
+      <button class="modal-btn" id="modalPlayAgain">🔄 Jogar Novamente</button>
+      <button class="modal-btn secondary" id="modalClose">Ver Resultado</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL DE CONFIGURAÇÕES ═══ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <span class="modal-emoji">⚙️</span>
+    <h2 class="modal-title" style="color: var(--accent2);">CONFIGURAÇÕES</h2>
+
+    <!-- Nome do jogador -->
+    <div class="settings-group">
+      <label class="settings-label">👤 Nome do Jogador</label>
+      <input type="text" id="playerNameInput" class="settings-input" maxlength="16" placeholder="Digite seu nome...">
+    </div>
+
+    <!-- Tema de emojis -->
+    <div class="settings-group">
+      <label class="settings-label">🎭 Tema de Emojis</label>
+      <div class="settings-options">
+        <button class="option-btn active" data-emoji="random">🎲 Aleatório</button>
+        <button class="option-btn" data-emoji="space">🚀 Espaço</button>
+        <button class="option-btn" data-emoji="animals">🦁 Animais</button>
+        <button class="option-btn" data-emoji="food">🍕 Comida</button>
+      </div>
+    </div>
+
+    <!-- Tema visual -->
+    <div class="settings-group">
+      <label class="settings-label">🎨 Tema Visual</label>
+      <div class="settings-options">
+        <button class="option-btn active" data-theme="purple">💜 Roxo</button>
+        <button class="option-btn" data-theme="blue">💙 Azul</button>
+        <button class="option-btn" data-theme="green">💚 Verde</button>
+        <button class="option-btn" data-theme="red">❤️ Vermelho</button>
+      </div>
+    </div>
+
+    <button class="modal-btn" id="saveSettings">✅ Salvar e Aplicar</button>
+    <button class="modal-btn secondary" id="closeSettings">Cancelar</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL DE RANKING ═══ -->
+<div class="modal-overlay" id="rankingModal">
+  <div class="modal ranking-modal">
+    <span class="modal-emoji">🏆</span>
+    <h2 class="modal-title" style="color: var(--gold);">RANKING</h2>
+    <p class="modal-subtitle">Histórico de todas as suas partidas</p>
+
+    <!-- Filtro por dificuldade -->
+    <div class="difficulty-bar" style="margin-bottom: 16px;">
+      <button class="diff-btn active" data-filter="all">Todas</button>
+      <button class="diff-btn" data-filter="easy">Fácil</button>
+      <button class="diff-btn" data-filter="medium">Médio</button>
+      <button class="diff-btn" data-filter="hard">Difícil</button>
+    </div>
+
+    <!-- Lista de resultados -->
+    <div id="rankingList" class="ranking-list"></div>
+
+    <div style="display:flex; gap:10px; margin-top: 16px;">
+      <button class="modal-btn secondary" id="clearRanking">🗑️ Limpar</button>
+      <button class="modal-btn" id="closeRanking">Fechar</button>
+    </div>
+  </div>
+</div>
+
+  <script src="game.js"></script>
+</body>
+</html>
